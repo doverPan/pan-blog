@@ -4,8 +4,8 @@ subtitle: Vibe Coding 的经验与思考
 description: 不谈具体项目，只谈我对 Vibe Coding 的实践经验：怎样建立纪律、管理上下文、验证产出，以及为什么工程师的价值正在从写代码转向设计系统。
 pubDate: 2026-04-14
 tags:
-  - Vibe Coding
-  - AI Agent
+  - AI 协作开发
+  - AI 智能体
   - 工程实践
   - 系统设计
   - 方法论

@@ -1,5 +1,6 @@
 ---
 import ArticleEngagement from '../components/ArticleEngagement.astro';
+import TagLink from '../components/TagLink.astro';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
 import { readingTime } from '../utils/blog';
@@ -27,7 +28,7 @@ const minutes = readingTime(post.body);
         <span>{minutes} 分钟阅读</span>
       </div>
       <ul class="tag-list" aria-label="文章标签">
-        {post.data.tags.map((tag: string) => <li>{tag}</li>)}
+        {post.data.tags.map((tag: string) => <li><TagLink tag={tag} /></li>)}
       </ul>
     </header>
 

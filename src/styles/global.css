@@ -916,6 +916,33 @@ p {
   gap: 0.45rem;
 }
 
+.engagement-reactions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.reaction-chip {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 999px;
+  color: rgba(232, 241, 255, 0.92);
+  display: inline-flex;
+  height: 2rem;
+  justify-content: center;
+  min-width: 2rem;
+  padding: 0 0.55rem;
+}
+
+.reaction-chip svg {
+  height: 0.95rem;
+  width: 0.95rem;
+}
+
+.reaction-chip-text {
+  font-size: 0.9rem;
+}
+
 .engagement-surface,
 .engagement-placeholder {
   background: rgba(255, 255, 255, 0.035);

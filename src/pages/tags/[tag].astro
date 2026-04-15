@@ -2,32 +2,55 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostCard from '../../components/PostCard.astro';
+import StoneCard from '../../components/StoneCard.astro';
 import { getAllTags, isPublished, slugifyTag, sortPosts } from '../../utils/blog';
 
 export async function getStaticPaths() {
-  const posts = (await getCollection('blog')).filter(isPublished);
-  const tags = getAllTags(posts);
+  const posts = sortPosts((await getCollection('blog')).filter(isPublished));
+  const stones = sortPosts((await getCollection('stones')).filter(isPublished));
+  const tags = getAllTags([...posts, ...stones]);
 
   return tags.map((tag) => ({
     params: { tag: slugifyTag(tag) },
     props: {
       tag,
-      posts: sortPosts(posts.filter((post) => post.data.tags.includes(tag)))
+      posts: posts.filter((post) => post.data.tags.includes(tag)),
+      stones: stones.filter((stone) => stone.data.tags.includes(tag))
     }
   }));
 }
 
-const { tag, posts } = Astro.props;
+const { tag, posts, stones } = Astro.props;
 ---
 
-<BaseLayout title={`${tag} | Panjie`} description={`带有 ${tag} 标签的文章。`}>
+<BaseLayout title={`${tag} | Panjie`} description={`带有 ${tag} 标签的内容。`}>
   <section class="page-intro narrow">
-    <p class="eyebrow">标签归档</p>
+    <p class="eyebrow">标签筛选</p>
     <h1>{tag}</h1>
-    <p class="lede">和这个主题相关的文章、笔记与项目内容。</p>
+    <p class="lede">点击标签后，在这里集中查看相关内容。</p>
   </section>
 
-  <section class="card-grid">
-    {posts.map((post) => <PostCard post={post} />)}
-  </section>
+  {posts.length > 0 && (
+    <section class="section-block section-editorial">
+      <div class="section-heading">
+        <p class="eyebrow">文章</p>
+        <h2>相关文章</h2>
+      </div>
+      <div class="card-grid card-grid-editorial">
+        {posts.map((post) => <PostCard post={post} />)}
+      </div>
+    </section>
+  )}
+
+  {stones.length > 0 && (
+    <section class="section-block section-library">
+      <div class="section-heading">
+        <p class="eyebrow">他山之石</p>
+        <h2>相关摘录</h2>
+      </div>
+      <div class="card-grid">
+        {stones.map((stone) => <StoneCard stone={stone} />)}
+      </div>
+    </section>
+  )}
 </BaseLayout>

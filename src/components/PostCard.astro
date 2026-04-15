@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import TagLink from './TagLink.astro';
 
 type Props = {
   post: CollectionEntry<'blog'>;
@@ -18,6 +19,6 @@ const { post } = Astro.props;
   </h3>
   <p>{post.data.description}</p>
   <ul class="tag-list" aria-label="文章标签">
-    {post.data.tags.map((tag: string) => <li>{tag}</li>)}
+    {post.data.tags.map((tag: string) => <li><TagLink tag={tag} /></li>)}
   </ul>
 </article>
