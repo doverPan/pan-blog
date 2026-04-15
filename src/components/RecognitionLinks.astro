@@ -1,0 +1,82 @@
+---
+type Props = {
+  compact?: boolean;
+  title?: string;
+  description?: string;
+};
+
+type RecognitionLink = {
+  href: string;
+  label: string;
+  detail: string;
+  event: string;
+  external: boolean;
+};
+
+const { compact = false, title = '订阅与联系', description = '把长期认可沉淀到订阅、项目访问和直接联系。' } = Astro.props;
+
+const githubUrl = import.meta.env.PUBLIC_SITE_GITHUB_URL;
+const email = import.meta.env.PUBLIC_SITE_EMAIL;
+const projectUrl = import.meta.env.PUBLIC_SITE_PROJECT_URL;
+
+const links: RecognitionLink[] = [
+  {
+    href: '/rss.xml',
+    label: 'RSS',
+    detail: '订阅更新',
+    event: 'rss_subscribe',
+    external: false
+  },
+  githubUrl
+    ? {
+        href: githubUrl,
+        label: 'GitHub',
+        detail: '查看代码与项目',
+        event: 'profile_click',
+        external: true
+      }
+    : null,
+  email
+    ? {
+        href: `mailto:${email}`,
+        label: 'Email',
+        detail: email,
+        event: 'contact_click',
+        external: false
+      }
+    : null,
+  projectUrl
+    ? {
+        href: projectUrl,
+        label: 'Project',
+        detail: '查看项目演示',
+        event: 'project_click',
+        external: true
+      }
+    : null
+].filter((link): link is RecognitionLink => Boolean(link));
+---
+
+<section class:list={['recognition-links', compact && 'recognition-links-compact']}>
+  <div class="recognition-copy">
+    <p class="eyebrow">认可信号</p>
+    <h2>{title}</h2>
+    <p>{description}</p>
+  </div>
+
+  <div class="recognition-actions">
+    {links.map((link) => (
+      <a
+        class="recognition-link"
+        href={link.href}
+        data-analytics-event={link.event}
+        data-analytics-label={link.label.toLowerCase()}
+        target={link.external ? '_blank' : undefined}
+        rel={link.external ? 'noreferrer' : undefined}
+      >
+        <strong>{link.label}</strong>
+        <span>{link.detail}</span>
+      </a>
+    ))}
+  </div>
+</section>

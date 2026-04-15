@@ -1,0 +1,53 @@
+---
+import ArticleEngagement from '../components/ArticleEngagement.astro';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import { readingTime } from '../utils/blog';
+
+type Props = {
+  stone: CollectionEntry<'stones'>;
+};
+
+const { stone } = Astro.props;
+const minutes = readingTime(stone.body);
+---
+
+<BaseLayout title={`${stone.data.title} | 他山之石 | Panjie`} description={stone.data.description}>
+  <article class="article-shell">
+    <header class="article-header">
+      <p class="eyebrow">他山之石</p>
+      <h1>{stone.data.title}</h1>
+      <p class="lede">{stone.data.description}</p>
+      <div class="article-meta">
+        <span>{stone.data.pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+        <span>{minutes} 分钟阅读</span>
+      </div>
+      <ul class="tag-list" aria-label="摘录标签">
+        {stone.data.tags.map((tag: string) => <li>{tag}</li>)}
+      </ul>
+    </header>
+
+    <div class="article-content">
+      <slot />
+    </div>
+
+    <ArticleEngagement title="对摘录做个反馈" description="如果这条摘录有启发，欢迎点赞、点踩或留下补充观点。" />
+
+    <footer class="source-block">
+      <p class="eyebrow">来源</p>
+      <h2>原文信息</h2>
+      <p>
+        原文：<a
+          href={stone.data.sourceUrl}
+          target="_blank"
+          rel="noreferrer"
+          data-analytics-event="source_click"
+          data-analytics-label={stone.data.sourceName}
+        >{stone.data.sourceName}</a>
+      </p>
+      {stone.data.sourceAuthor && <p>作者：{stone.data.sourceAuthor}</p>}
+      {stone.data.sourceNote && <p>{stone.data.sourceNote}</p>}
+      <p>这个板块固定在文末展示来源信息；缺少来源字段时，项目将无法通过内容校验。</p>
+    </footer>
+  </article>
+</BaseLayout>

@@ -1,0 +1,61 @@
+---
+type Props = {
+  title?: string;
+  description?: string;
+};
+
+const {
+  title = '点赞 / 点踩 / 评论',
+  description = '如果这篇内容对你有帮助，可以直接留下反应或评论。'
+} = Astro.props;
+
+const repo = import.meta.env.PUBLIC_GISCUS_REPO;
+const repoId = import.meta.env.PUBLIC_GISCUS_REPO_ID;
+const category = import.meta.env.PUBLIC_GISCUS_CATEGORY;
+const categoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
+
+const mapping = import.meta.env.PUBLIC_GISCUS_MAPPING ?? 'pathname';
+const strict = import.meta.env.PUBLIC_GISCUS_STRICT ?? '0';
+const reactionsEnabled = import.meta.env.PUBLIC_GISCUS_REACTIONS_ENABLED ?? '1';
+const emitMetadata = import.meta.env.PUBLIC_GISCUS_EMIT_METADATA ?? '0';
+const inputPosition = import.meta.env.PUBLIC_GISCUS_INPUT_POSITION ?? 'top';
+const theme = import.meta.env.PUBLIC_GISCUS_THEME ?? 'dark_dimmed';
+const lang = import.meta.env.PUBLIC_GISCUS_LANG ?? 'zh-CN';
+
+const isConfigured = Boolean(repo && repoId && category && categoryId);
+---
+
+<section class="engagement-block">
+  <div class="engagement-copy">
+    <p class="eyebrow">互动</p>
+    <h2>{title}</h2>
+    <p>{description}</p>
+  </div>
+
+  {isConfigured ? (
+    <div class="engagement-surface">
+      <script
+        is:inline
+        src="https://giscus.app/client.js"
+        data-repo={repo}
+        data-repo-id={repoId}
+        data-category={category}
+        data-category-id={categoryId}
+        data-mapping={mapping}
+        data-strict={strict}
+        data-reactions-enabled={reactionsEnabled}
+        data-emit-metadata={emitMetadata}
+        data-input-position={inputPosition}
+        data-theme={theme}
+        data-lang={lang}
+        crossorigin="anonymous"
+        async
+      ></script>
+    </div>
+  ) : (
+    <div class="engagement-placeholder">
+      <p>配置 Giscus 后，这里会显示每篇文章的点赞、点踩和评论区。</p>
+      <p>需要填写 `.env` 中的 `PUBLIC_GISCUS_*` 参数。</p>
+    </div>
+  )}
+</section>

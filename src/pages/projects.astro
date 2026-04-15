@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { projects } from '../data/projects';
+---
+
+<BaseLayout title="项目 | Panjie" description="项目摘要、工程总结与实现取舍。">
+  <section class="page-intro page-intro-projects">
+    <p class="eyebrow">项目</p>
+    <h1>少一点解释，多一点可读的项目证据。</h1>
+    <p class="lede">这里优先展示项目做了什么、技术怎么落地、最后留下了什么结果。</p>
+  </section>
+
+  <section class="section-block split-section section-systems">
+    <article class="signal-card compact-card">
+      <p class="panel-label">看什么</p>
+      <h2>问题拆解</h2>
+      <p>项目目标是否清楚，路径是否可执行。</p>
+    </article>
+
+    <article class="signal-card compact-card">
+      <p class="panel-label">看什么</p>
+      <h2>工程落地</h2>
+      <p>模型参与在哪一段，系统最终如何变得可维护。</p>
+    </article>
+  </section>
+
+  <section class="project-list project-list-systems">
+    {projects.map((project) => (
+      <article class="project-card project-card-large">
+        <h2>{project.name}</h2>
+        <p>{project.summary}</p>
+        {project.highlights && (
+          <ul class="compact-list" aria-label={`${project.name} highlights`}>
+            {project.highlights.map((item) => <li>{item}</li>)}
+          </ul>
+        )}
+        <div class="project-meta-group">
+          <p class="project-meta"><strong>关注点</strong><span>{project.focus}</span></p>
+          <p class="project-meta"><strong>结果</strong><span>{project.outcome}</span></p>
+        </div>
+        <div class="project-actions">
+          <a href="/about" data-analytics-event="project_interest" data-analytics-label={project.name}>
+            进一步联系我
+          </a>
+          {project.link && (
+            <a href={project.link} target="_blank" rel="noreferrer" data-analytics-event="project_click" data-analytics-label={project.name}>
+              查看项目演示
+            </a>
+          )}
+        </div>
+        <ul class="tag-list" aria-label={`${project.name} technologies`}>
+          {project.stack.map((item) => <li>{item}</li>)}
+        </ul>
+      </article>
+    ))}
+  </section>
+</BaseLayout>

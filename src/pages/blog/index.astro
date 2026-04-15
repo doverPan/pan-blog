@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { isPublished, sortPosts } from '../../utils/blog';
+
+const posts = sortPosts((await getCollection('blog')).filter(isPublished));
+---
+
+<BaseLayout title="文章 | Panjie" description="技术文章、项目记录、排障总结与工程思考。">
+  <section class="page-intro page-intro-editorial">
+    <p class="eyebrow">文章</p>
+    <h1>持续积累的技术写作。</h1>
+    <p class="lede">
+      这里适合放教程总结、项目复盘、故障排查记录、架构分析，以及你对工程实践的长期思考。
+    </p>
+  </section>
+
+  <section class="card-grid card-grid-editorial">
+    {posts.map((post) => <PostCard post={post} />)}
+  </section>
+</BaseLayout>

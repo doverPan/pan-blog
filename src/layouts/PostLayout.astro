@@ -1,0 +1,40 @@
+---
+import ArticleEngagement from '../components/ArticleEngagement.astro';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import { readingTime } from '../utils/blog';
+
+type Props = {
+  post: CollectionEntry<'blog'>;
+};
+
+const { post } = Astro.props;
+const minutes = readingTime(post.body);
+---
+
+<BaseLayout
+  title={`${post.data.title}${post.data.subtitle ? ` · ${post.data.subtitle}` : ''} | Panjie`}
+  description={post.data.description}
+>
+  <article class="article-shell">
+    <header class="article-header">
+      <p class="eyebrow">技术文章</p>
+      <h1>{post.data.title}</h1>
+      {post.data.subtitle && <p class="article-subtitle">{post.data.subtitle}</p>}
+      <p class="lede">{post.data.description}</p>
+      <div class="article-meta">
+        <span>{post.data.pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+        <span>{minutes} 分钟阅读</span>
+      </div>
+      <ul class="tag-list" aria-label="文章标签">
+        {post.data.tags.map((tag: string) => <li>{tag}</li>)}
+      </ul>
+    </header>
+
+    <div class="article-content">
+      <slot />
+    </div>
+
+    <ArticleEngagement />
+  </article>
+</BaseLayout>

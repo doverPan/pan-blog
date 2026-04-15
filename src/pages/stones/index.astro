@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StoneCard from '../../components/StoneCard.astro';
+import { isPublished, sortPosts } from '../../utils/blog';
+
+const stones = sortPosts((await getCollection('stones')).filter(isPublished));
+---
+
+<BaseLayout title="他山之石 | Panjie" description="摘录值得反复阅读的他人文章，并在文末强制标注来源。">
+  <section class="page-intro">
+    <p class="eyebrow">他山之石</p>
+    <h1>摘录值得反复阅读的好文章。</h1>
+    <p class="lede">
+      这里收录我摘录的他人文章内容、观点和片段。每篇摘录都必须在文末明确标注来源，方便回溯原文。
+    </p>
+  </section>
+
+  <section class="card-grid">
+    {stones.map((stone) => <StoneCard stone={stone} />)}
+  </section>
+</BaseLayout>

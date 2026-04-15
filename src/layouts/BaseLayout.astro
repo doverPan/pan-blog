@@ -1,0 +1,36 @@
+---
+import Analytics from '../components/Analytics.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import '../styles/global.css';
+
+type Props = {
+  title: string;
+  description: string;
+  mainClass?: string;
+};
+
+const { title, description, mainClass } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title="Panjie 订阅" href="/rss.xml" />
+    <title>{title}</title>
+    <Analytics />
+  </head>
+  <body>
+    <div class="page-shell">
+      <SiteHeader />
+      <main class={mainClass}>
+        <slot />
+      </main>
+      <SiteFooter />
+    </div>
+  </body>
+</html>

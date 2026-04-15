@@ -1,0 +1,45 @@
+---
+const provider = import.meta.env.PUBLIC_ANALYTICS_PROVIDER;
+const analyticsScriptSrc = import.meta.env.PUBLIC_ANALYTICS_SRC;
+const analyticsDomain = import.meta.env.PUBLIC_ANALYTICS_DOMAIN;
+const umamiWebsiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
+
+const isPlausible = provider === 'plausible' && Boolean(analyticsScriptSrc && analyticsDomain);
+const isUmami = provider === 'umami' && Boolean(analyticsScriptSrc && umamiWebsiteId);
+const isEnabled = isPlausible || isUmami;
+---
+
+{isPlausible && <script is:inline defer data-domain={analyticsDomain} src={analyticsScriptSrc}></script>}
+
+{isUmami && <script is:inline async data-website-id={umamiWebsiteId} src={analyticsScriptSrc}></script>}
+
+{isEnabled && (
+  <script is:inline define:vars={{ provider }}>
+    const trackEvent = (name, data) => {
+      if (provider === 'plausible' && typeof window.plausible === 'function') {
+        window.plausible(name, data ? { props: data } : undefined);
+      }
+
+      if (provider === 'umami' && window.umami?.track) {
+        window.umami.track(name, data);
+      }
+    };
+
+    document.addEventListener('click', (event) => {
+      const target = event.target instanceof Element ? event.target.closest('[data-analytics-event]') : null;
+
+      if (!target) {
+        return;
+      }
+
+      const eventName = target.getAttribute('data-analytics-event');
+      const eventLabel = target.getAttribute('data-analytics-label');
+
+      if (!eventName) {
+        return;
+      }
+
+      trackEvent(eventName, eventLabel ? { label: eventLabel } : undefined);
+    });
+  </script>
+)}

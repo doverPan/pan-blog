@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RecognitionLinks from '../components/RecognitionLinks.astro';
+---
+
+<BaseLayout title="关于 | Panjie" description="关于 Panjie、技术方向、写作主题与联系方式。">
+  <section class="page-intro narrow page-intro-about">
+    <p class="eyebrow">关于</p>
+    <h1>把 AI 写码，做成真正能交付的工程流程。</h1>
+    <p class="lede">这里先保留一个轻量版自我介绍，重点放在方向、写作主题和协作方式。</p>
+  </section>
+
+  <section class="detail-grid detail-grid-about">
+    <article class="detail-card">
+      <h2>我的定位</h2>
+      <p>AI 协作开发、快速验证、生成代码工程化。</p>
+    </article>
+
+    <article class="detail-card">
+      <h2>我写什么</h2>
+      <p>项目复盘、工作流设计、系统实现和生成代码治理。</p>
+    </article>
+
+    <article class="detail-card">
+      <h2>如何联系我</h2>
+      <p>通过下方入口区配置并展示 GitHub、邮箱、项目演示和 RSS 订阅。</p>
+    </article>
+  </section>
+
+  <RecognitionLinks title="订阅 / 联系 / GitHub" description="这些入口既是认可信号，也会成为你后续观察转化的核心埋点。" />
+
+  <section class="section-block split-section section-about-flow">
+    <article class="signal-card compact-card">
+      <p class="panel-label">工作方式</p>
+      <h2>先发散，再收敛</h2>
+      <p>用模型扩展解法空间，用人控制质量边界和最终取舍。</p>
+    </article>
+
+    <article class="signal-card compact-card">
+      <p class="panel-label">持续关注</p>
+      <h2>把原型变成交付</h2>
+      <p>关注可靠性、协作流程和长期维护，而不只是一轮 demo。</p>
+    </article>
+  </section>
+</BaseLayout>

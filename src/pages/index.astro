@@ -1,0 +1,170 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import StoneCard from '../components/StoneCard.astro';
+import { projects } from '../data/projects';
+import { isPublished, sortPosts } from '../utils/blog';
+
+const posts = sortPosts((await getCollection('blog')).filter(isPublished));
+const stones = sortPosts((await getCollection('stones')).filter(isPublished));
+const featuredPosts = posts.filter((post) => post.data.featured).slice(0, 2);
+const latestPosts = posts.slice(0, 4);
+const latestStones = stones.slice(0, 2);
+
+const workflow = [
+  '先让模型扩张解法空间，再快速收敛到最值得实现的路径。',
+  '把生成代码当作草稿，而不是默认当作可以直接上线的答案。',
+  '用重构、约束、验证和复盘，把 vibe 变成真正可靠的工程产出。'
+];
+
+const capabilityTags = [
+  'AI 协作开发',
+  'Prompt to Product',
+  '生成代码评估',
+  '原型验证',
+  '工程重构',
+  '工作流设计'
+];
+
+const currentFocus = [
+  '如何让模型参与真实项目，而不是停留在 demo 层',
+  '如何建立生成代码的审查标准、回归验证和维护边界',
+  '如何把 AI 辅助写码纳入可交付、可协作、可复盘的工程流程'
+];
+---
+
+<BaseLayout
+  title="Panjie | AI vibe coding 博客"
+  description="一个围绕 AI vibe coding、工程实验、项目复盘与技术思考展开的个人博客。"
+  mainClass="home-main"
+>
+  <section class="hero-grid hero-grid-home">
+    <div class="hero-copy">
+      <p class="eyebrow">AI vibe coding / engineering notes</p>
+      <h1>和模型一起编程，也要把判断力写出来。</h1>
+      <p class="lede">
+        这个博客聚焦 AI vibe coding 下的真实工程实践：我如何和模型协作、如何判断生成代码是否可靠、如何把实验变成可维护的产品与项目经验。
+      </p>
+      <div class="hero-actions">
+        <a class="button-primary" href="/blog" data-analytics-event="home_cta_click" data-analytics-label="blog">
+          阅读文章
+        </a>
+        <a class="button-secondary" href="/stones" data-analytics-event="home_cta_click" data-analytics-label="stones">
+          查看他山之石
+        </a>
+      </div>
+    </div>
+
+    <aside class="hero-panel">
+      <p class="panel-label">当前关注</p>
+      <ul>
+        <li>模型协作下的产品开发、原型推进与快速验证</li>
+        <li>生成代码的评估、重构、约束和工程化落地</li>
+        <li>从提示到系统设计的完整工作流与真实取舍</li>
+      </ul>
+    </aside>
+  </section>
+
+  <section class="section-block section-editorial">
+    <div class="section-heading">
+      <p class="eyebrow">精选输出</p>
+      <h2>从实践里沉淀出来的文章</h2>
+    </div>
+    <div class="card-grid two-up">
+      {featuredPosts.map((post) => <PostCard post={post} />)}
+    </div>
+  </section>
+
+  <section class="section-block split-section section-systems">
+    <div>
+      <div class="section-heading">
+        <p class="eyebrow">工作流</p>
+        <h2>我如何进行 AI vibe coding</h2>
+      </div>
+      <div class="signal-list">
+        {workflow.map((item) => (
+          <article class="signal-card">
+            <p>{item}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <div>
+      <div class="section-heading">
+        <p class="eyebrow">能力标签</p>
+        <h2>我更关注的交付能力</h2>
+      </div>
+      <ul class="tag-cloud tag-cloud-compact">
+        {capabilityTags.map((item) => <li><span>{item}</span></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section-block section-research">
+    <div class="section-heading">
+      <p class="eyebrow">当前关注</p>
+      <h2>AI 协作开发里真正值得深挖的问题</h2>
+    </div>
+    <div class="signal-list signal-list-wide">
+      {currentFocus.map((item) => (
+        <article class="signal-card signal-card-wide">
+          <p>{item}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section-block split-section section-library">
+    <div>
+      <div class="section-heading">
+        <p class="eyebrow">最新记录</p>
+        <h2>AI 协作开发中的文章与复盘</h2>
+      </div>
+      <div class="card-grid">
+        {latestPosts.map((post) => <PostCard post={post} />)}
+      </div>
+    </div>
+
+    <div>
+      <div class="section-heading">
+        <p class="eyebrow">他山之石</p>
+        <h2>外部文章里的启发与证据</h2>
+      </div>
+      <div class="card-grid">
+        {latestStones.map((stone) => <StoneCard stone={stone} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block section-projects-home">
+    <div class="section-heading">
+      <p class="eyebrow">项目展示</p>
+      <h2>适合展示给团队和合作方的项目切面</h2>
+    </div>
+    <div class="project-list">
+      {projects.map((project) => (
+        <article class="project-card">
+          <h3>{project.name}</h3>
+          <p>{project.summary}</p>
+          <p class="project-meta"><strong>关注点：</strong>{project.focus}</p>
+          <p class="project-meta"><strong>价值：</strong>{project.outcome}</p>
+          <div class="project-actions">
+            <a href="/projects" data-analytics-event="project_browse" data-analytics-label={project.name}>
+              浏览项目详情
+            </a>
+            {project.link && (
+              <a href={project.link} target="_blank" rel="noreferrer" data-analytics-event="project_click" data-analytics-label={project.name}>
+                查看项目演示
+              </a>
+            )}
+          </div>
+          <ul class="tag-list" aria-label={`${project.name} stack`}>
+            {project.stack.map((item) => <li>{item}</li>)}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

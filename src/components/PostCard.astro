@@ -1,0 +1,23 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+type Props = {
+  post: CollectionEntry<'blog'>;
+};
+
+const { post } = Astro.props;
+---
+
+<article class="post-card">
+  <div class="post-card-top">
+    <p>{post.data.pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: 'short', day: 'numeric' })}</p>
+    {post.data.featured && <span class="pill">精选</span>}
+  </div>
+  <h3>
+    <a href={`/blog/${post.slug}/`}>{post.data.title}</a>
+  </h3>
+  <p>{post.data.description}</p>
+  <ul class="tag-list" aria-label="文章标签">
+    {post.data.tags.map((tag: string) => <li>{tag}</li>)}
+  </ul>
+</article>

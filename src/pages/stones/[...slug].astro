@@ -1,0 +1,25 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import StoneLayout from '../../layouts/StoneLayout.astro';
+import { isPublished } from '../../utils/blog';
+
+export async function getStaticPaths() {
+  const stones = (await getCollection('stones')).filter(isPublished);
+
+  return stones.map((stone) => ({
+    params: { slug: stone.slug },
+    props: { stone }
+  }));
+}
+
+type Props = {
+  stone: CollectionEntry<'stones'>;
+};
+
+const { stone } = Astro.props;
+const { Content } = await stone.render();
+---
+
+<StoneLayout stone={stone}>
+  <Content />
+</StoneLayout>

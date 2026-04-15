@@ -1,0 +1,33 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getAllTags, isPublished, slugifyTag, sortPosts } from '../../utils/blog';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('blog')).filter(isPublished);
+  const tags = getAllTags(posts);
+
+  return tags.map((tag) => ({
+    params: { tag: slugifyTag(tag) },
+    props: {
+      tag,
+      posts: sortPosts(posts.filter((post) => post.data.tags.includes(tag)))
+    }
+  }));
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout title={`${tag} | Panjie`} description={`带有 ${tag} 标签的文章。`}>
+  <section class="page-intro narrow">
+    <p class="eyebrow">标签归档</p>
+    <h1>{tag}</h1>
+    <p class="lede">和这个主题相关的文章、笔记与项目内容。</p>
+  </section>
+
+  <section class="card-grid">
+    {posts.map((post) => <PostCard post={post} />)}
+  </section>
+</BaseLayout>
